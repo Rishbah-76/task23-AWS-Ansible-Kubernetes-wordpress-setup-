@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: "mysql"
+   labels: 
+      env: "backend"
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         env: frontend
+   template:
+      metadata:
+         name: "msql"
+         labels:
+            env: frontend
+      spec:
+         containers:
+         - name: mysql
+           image: mysql:5.7 
+           env:
+            - name: MYSQL_DATABASE
+              value: "db1"
+            - name: MYSQL_USER
+              value: "rishabh"
+            - name: MYSQL_ROOT_PASSWORD
+              value: "redhat"
+            - name: MYSQL_PASSWORD
+              value: "redhat"
+
+
+

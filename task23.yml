@@ -1,0 +1,36 @@
+- hosts: master
+  tasks:
+  - name: Copying all the yml for k8s
+    copy:
+      src: "{{item}}"
+      dest: /root
+    with_items:
+      - service.yml
+      - mysql.yml
+      - mywp.yml
+
+  - name: Deleting all the pre-existing Pods
+    command: kubectl delete all --all
+
+  - name: Running mySql Deployment
+    command: kubectl apply -f /root/mysql.yml
+
+  - name: Running the Wordpress Deploymnet
+    command: kubectl apply -f /root/mywp.yml
+
+  - name: Waiting for containers to get ready
+    pause:
+      seconds: 40
+
+  - name: Exposing my wordpress POD
+    command: kubectl apply -f /root/service.yml
+
+  - name: Service info
+    command: kubectl get svc
+    register: x1
+
+  - name: Getting the Service Details
+    debug:
+      var: x1.stdout
+
+
